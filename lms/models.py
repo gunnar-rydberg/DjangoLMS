@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 # Create your models here.
 
@@ -33,9 +34,10 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
-    #TODO get_absolute_url(self):
-        #return reverse(...
-
+    def get_absolute_url(self):
+        """ Returns detail view """
+        return reverse('course-detail', args=[str(self.id)])
+    
 class Module(models.Model):
     """ Course module """
     name = models.CharField(max_length=50)

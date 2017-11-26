@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Title: {{ course.name }}</h1>
+
+  <p><strong>Description:</strong> {{ course.description }}</p>
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Module(s)</h4>
+
+    <!-- NOTE bookinstance_set is created by the framework -->
+    {% for module in course.module_set.all %}
+    <hr>
+    <p><strong>Name:</strong> {{ module.name }}</p>
+    <p><strong>Description:</strong> {{ module.description }}</p>
+    {% endfor %}
+  </div>
+  {% endblock %}
