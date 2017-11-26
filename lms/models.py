@@ -4,6 +4,15 @@ from django.urls import reverse
 
 # Create your models here.
 
+class PermissionsSupport(models.Model):
+    """ Dummy class for setting up general user permissions """
+    class Meta:
+        managed = False # Don't manage in DB
+        permissions = (
+            ('teacher_rights', 'Global teacher rights'),
+        )
+        
+
 class Course(models.Model):
     """ Course """
     name = models.CharField(max_length=50)

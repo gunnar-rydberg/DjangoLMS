@@ -14,6 +14,8 @@ def index(request):
 
 
 from django.views import generic
+from django.contrib.auth.decorators import  permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 class CourseListView(generic.ListView):
     model = Course
@@ -22,8 +24,9 @@ class CourseListView(generic.ListView):
 class CourseDetailView(generic.DetailView):
     model = Course
 
-
-class CourseCreateView(generic.CreateView):
+# Teacher rights required
+class CourseCreateView(PermissionRequiredMixin, generic.CreateView):
+    permission_required = 'lms.teacher_rights'
     model = Course
     fields = ['name','name_full','description','start_date','end_date']
     template_name_suffix = '_create'
