@@ -29,8 +29,9 @@
 
           {% if perms.lms.teacher_rights %}
           <li><a href="{% url 'course-create' %}">Create course</a></li>
+          <li><a href="{% url 'student-create' %}">Create student</a></li>
           {% endif %}
-          
+
           <hr>
 
           {% if user.is_authenticated %}

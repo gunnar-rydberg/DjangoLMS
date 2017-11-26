@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^courses/$', views.CourseListView.as_view(), name='courses'),
     url(r'course/(?P<pk>\d+)$', views.CourseDetailView.as_view(), name='course-detail'), 
     url(r'course-create/$', views.CourseCreateView.as_view(), name='course-create'),
+    url(r'student-create/$', views.create_student, name='student-create'),
 
 ]

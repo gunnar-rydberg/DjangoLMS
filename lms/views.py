@@ -30,3 +30,27 @@ class CourseCreateView(PermissionRequiredMixin, generic.CreateView):
     model = Course
     fields = ['name','name_full','description','start_date','end_date']
     template_name_suffix = '_create'
+
+
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import redirect
+
+def create_student(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = UserCreationForm()
+    return render(request, 'lms\student_create.html', {'form':form})
+
+
+
+
+
+
+
+
+
+
