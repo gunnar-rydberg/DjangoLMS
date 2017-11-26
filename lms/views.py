@@ -23,4 +23,7 @@ class CourseDetailView(generic.DetailView):
     model = Course
 
 
-    
+class CourseCreateView(generic.CreateView):
+    model = Course
+    fields = ['name','name_full','description','start_date','end_date']
+    template_name_suffix = '_create'
