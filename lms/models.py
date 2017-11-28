@@ -11,7 +11,12 @@ class PermissionsSupport(models.Model):
         permissions = (
             ('teacher_rights', 'Global teacher rights'),
         )
-        
+
+
+class UserProfile(models.Model):
+    """ extends User model """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    current_course = models.ForeignKey('Course', on_delete=None)
 
 class Course(models.Model):
     """ Course """

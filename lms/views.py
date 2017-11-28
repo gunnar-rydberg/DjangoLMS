@@ -15,13 +15,13 @@ def index(request):
 
 from django.views import generic
 from django.contrib.auth.decorators import  permission_required
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 
-class CourseListView(generic.ListView):
+class CourseListView(LoginRequiredMixin, generic.ListView):
     model = Course
 
 
-class CourseDetailView(generic.DetailView):
+class CourseDetailView(LoginRequiredMixin, generic.DetailView):
     model = Course
 
 # Teacher rights required
@@ -34,15 +34,18 @@ class CourseCreateView(PermissionRequiredMixin, generic.CreateView):
 
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
+from .forms import UserCreateForm
 
+@permission_required('lms.teacher_rights')
 def create_student(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = UserCreateForm(request.POST)
+        
         if form.is_valid():
             form.save()
             return redirect('index')
     else:
-        form = UserCreationForm()
+        form = UserCreateForm()
     return render(request, 'lms\student_create.html', {'form':form})
 
 
