@@ -18,8 +18,17 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     current_course = models.ForeignKey('Course', on_delete=None)
 
+
+class CourseManager(models.Manager):
+    """ Course manager """
+    def get_choicefield_list(self):
+        return self.values_list('id', 'name').order_by('name')
+
+
 class Course(models.Model):
     """ Course """
+    objects = CourseManager()
+
     name = models.CharField(max_length=50)
     name_full = models.CharField(max_length=100)
     description = models.TextField(max_length=1000)
@@ -51,7 +60,8 @@ class Course(models.Model):
     def get_absolute_url(self):
         """ Returns detail view """
         return reverse('course-detail', args=[str(self.id)])
-    
+
+
 class Module(models.Model):
     """ Course module """
     name = models.CharField(max_length=50)

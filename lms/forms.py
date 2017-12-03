@@ -14,10 +14,14 @@ class UserCreateForm(forms.ModelForm):
     """ Create new user form """
     is_teacher = forms.BooleanField(label='Teacher user', required=False)
     password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
+    
+    #NOTE that modelfield is more suitable for this really...
+    course = forms.TypedChoiceField(label='Course(s)', required=False, empty_value="None", 
+        choices=(('','None'),) + tuple(Course.objects.get_choicefield_list()) )
 
     class Meta:
         model = User
-        fields = ('is_teacher', "username", "password1" )
+        fields = ('is_teacher', "username", "password1", 'course' )
 
     def save(self, commit=True):
         user = super(UserCreateForm, self).save(commit=False)
@@ -32,6 +36,11 @@ class UserCreateForm(forms.ModelForm):
             else:
                 group = Group.objects.get(name='Student')
                 group.user_set.add(user)
+            if self.cleaned_data['course'] != '':
+                course = Course.objects.get(id = self.cleaned_data['course'] )
+                course.students.add(user)
+                course.save()
+                
 
         return user
 
