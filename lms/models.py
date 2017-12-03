@@ -81,4 +81,37 @@ class Module(models.Model):
     def __str__(self):
         return self.name
 
-    
+
+class Activity(models.Model):
+    """ Course module """
+    name = models.CharField(max_length=50)
+    description = models.TextField(max_length=1000)
+
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+
+    module = models.ForeignKey('Module', on_delete=models.CASCADE) #TODO never delete anything!
+
+    #TODO documents
+
+    ACTIVITY_TYPE = (
+        ('l', 'Lecture'),
+        ('e', 'E-Learning'),
+        ('x', 'Exercise'),
+        ('o', 'Other'),
+    )
+
+    activity_type = models.CharField(max_length=1, choices=ACTIVITY_TYPE, default='l')
+
+
+    def get_activity_type(self):
+        return next(name for (key,name) in self.ACTIVITY_TYPE if key == self.activity_type)
+
+
+    class Meta:
+        ordering = ['start_date']
+
+
+    def __str__(self):
+        return self.name
+

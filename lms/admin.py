@@ -1,10 +1,15 @@
 from django.contrib import admin
-from .models import Course, Module
+from .models import Course, Module, Activity
 
-# Register your models here.
+class ActivityInline(admin.TabularInline):
+    model = Activity
+    extra = 0
+
 
 class ModuleInline(admin.TabularInline):
     model = Module
+    extra = 0
+    inlines = [ActivityInline]
 
 
 #admin.site.register(Course)
@@ -14,4 +19,11 @@ class CourseAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     inlines = [ModuleInline]
 
-admin.site.register(Module)
+
+@admin.register(Module)
+class ModuleAdmin(admin.ModelAdmin):
+    list_filter = ('course','status')
+    inlines = [ActivityInline]
+
+
+admin.site.register(Activity)
