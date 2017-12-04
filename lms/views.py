@@ -31,6 +31,32 @@ class CourseCreateView(PermissionRequiredMixin, generic.CreateView):
     fields = ['name','name_full','description','start_date','end_date']
     template_name_suffix = '_create'
 
+from django import forms
+
+class ModuleCreateForm(forms.ModelForm):
+    # my_date_field = forms.DateField(
+    #     widget=forms.DateInput(format=('%Y-%m-%d'), 
+    #                            attrs={'type': 'date',
+    #                                'class':'myDateClass', 
+    #                            'placeholder':'Select a date'}))
+
+    class Meta:
+        model = Module
+        fields = ['name','description','start_date','end_date', 'course']
+        widgets =  {'course': forms.HiddenInput()}
+        
+
+class ModuleCreateView(PermissionRequiredMixin, generic.CreateView):
+    permission_required = 'lms.teacher_rights'
+    model = Module
+    form_class = ModuleCreateForm
+    template_name_suffix = '_create'
+    
+
+    def get_initial(self):
+        return {'course': self.kwargs['course_id']}
+
+
 
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect

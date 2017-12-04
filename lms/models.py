@@ -70,7 +70,7 @@ class Module(models.Model):
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
 
-    order = models.IntegerField()
+    order = models.IntegerField(null=True)
 
     course = models.ForeignKey('Course', on_delete=models.CASCADE) #TODO never delete anything!
 
@@ -86,10 +86,14 @@ class Module(models.Model):
     status = models.CharField(max_length=1, choices=MODULE_STATUS, default='p')
 
     class Meta:
-        ordering = ['order']
+        ordering = ['start_date']
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        """ Returns detail view """
+        return reverse('course-detail', args=[str(self.course.id)])
 
 
 class Activity(models.Model):

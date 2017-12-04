@@ -8,6 +8,10 @@
   <div style="margin-left:20px;margin-top:20px">
     <h4>Module(s)</h4>
 
+    {% if perms.lms.teacher_rights %}
+    <a href="{% url 'module-create' course.id %}">Create module</a>
+    {% endif %}
+
     {% for module in course.module_set.all %}
     <hr>
     <p><strong>Name:</strong> {{ module.name }}</p>
