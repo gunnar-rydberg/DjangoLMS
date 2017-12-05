@@ -129,3 +129,24 @@ class Activity(models.Model):
     def __str__(self):
         return self.name
 
+import uuid
+
+class Document(models.Model):
+    """ Document handle entity """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file_name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    #user = models.ForeignKey(User)
+    #date = ...
+    course = models.ForeignKey('Course', null=True)
+
+    def get_id(self):
+        return str(self.id)
+
+    class Meta:
+        ordering = ['file_name']
+
+    
+
+
+

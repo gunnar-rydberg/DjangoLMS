@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Course, Module
+from .models import Course, Module, Document
 
 # Create your views here.
 
@@ -80,6 +80,7 @@ def create_student(request):
 # https://docs.djangoproject.com/en/1.11/topics/http/file-uploads/
 class UploadFileForm(forms.Form):
     description = forms.CharField(max_length = 200)
+    course_id = forms.CharField(widget = forms.HiddenInput())
     file = forms.FileField()
 
 
@@ -90,31 +91,44 @@ def upload_file(request):
         print(request.FILES)
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            store_uploaded_file(request.FILES['file'])
+            document = Document(file_name = request.FILES['file'].name,
+                                description = form.cleaned_data['description'],
+                                course = Course.objects.get(pk = form.cleaned_data['course_id']))
+            document.save()
+            print(document.id)
+            store_uploaded_file(request.FILES['file'], document.id, request.FILES['file'].name)
             return redirect('index')
     else:
-        form = UploadFileForm()
+        form = UploadFileForm(initial = {'course_id': request.GET.get('course_id') } )
     return render(request, r'lms\upload_file.html', {'form':form})
 
 
 import os
 
-def store_uploaded_file(file):
-    file_path = os.path.join('storage', file.name)
-    #TODO must create 'storage' folder if not existing
-    with open(file_path , 'wb+') as f:
+def store_uploaded_file(file, document_id, file_name):
+    print("upload method")
+    print(document_id)
+    path = os.path.join('storage', str(document_id))
+    if not os.path.exists(path):
+        os.makedirs(path)
+    
+    with open(os.path.join(path, file_name) , 'wb+') as f:
         for chunk in file.chunks():
             f.write(chunk)
 
 
 from django.http import HttpResponse
 
-def serve_file(request, file_id):
-    print("serving file: {}".format(file_id))
+def serve_file(request, document_id):
     """ Serve file for download """
-    file = open(os.path.join('storage', file_id), 'rb')
+    document = Document.objects.get(id = document_id)
+    print("serving file: {} ({})".format(document.id, document.file_name))
+    path = os.path.join('storage',document_id)
+    file_name = "test.txt" #TODO fetch from db
+
+    file = open(os.path.join(path, file_name), 'rb')
     response = HttpResponse(file, content_type ="application/octet-stream")
-    response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_id)
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_name)
     return response
 
 

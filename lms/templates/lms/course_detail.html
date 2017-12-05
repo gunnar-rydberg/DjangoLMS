@@ -6,12 +6,25 @@
   <p><strong>Description:</strong> {{ course.description }}</p>
 
   <div style="margin-left:20px;margin-top:20px">
-    <h4>Module(s)</h4>
-
+    
     {% if perms.lms.teacher_rights %}
     <p><a href="{% url 'module-create' course.id %}">Create module</a></p>
-    <p><a href="{% url 'upload-file' %}">Upload File</a></p>
+    <p><a href="{% url 'upload-file' %}?course_id={{ course.id }}">Upload File</a></p>
     {% endif %}
+
+    <hr>
+
+    {% if course.document_set.count > 0 %}
+    <h4>Files(s)</h4>
+    {% for document in course.document_set.all %}
+    <p><a href="{% url 'storage' document_id=document.get_id %}">{{ document.file_name }}</a></p>
+    {% endfor %}
+    <hr>
+    {% endif %}
+
+    
+    <h4>Module(s)</h4>
+
 
     {% for module in course.module_set.all %}
     <hr>

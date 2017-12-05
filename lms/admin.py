@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, Module, Activity
+from .models import Course, Module, Activity, Document
 
 class ActivityInline(admin.TabularInline):
     model = Activity
@@ -27,3 +27,4 @@ class ModuleAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Activity)
+admin.site.register(Document)
