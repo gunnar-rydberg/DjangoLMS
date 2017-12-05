@@ -9,7 +9,8 @@
     <h4>Module(s)</h4>
 
     {% if perms.lms.teacher_rights %}
-    <a href="{% url 'module-create' course.id %}">Create module</a>
+    <p><a href="{% url 'module-create' course.id %}">Create module</a></p>
+    <p><a href="{% url 'upload-file' %}">Upload File</a></p>
     {% endif %}
 
     {% for module in course.module_set.all %}

@@ -76,6 +76,50 @@ def create_student(request):
 
 
 
+# See django docs:
+# https://docs.djangoproject.com/en/1.11/topics/http/file-uploads/
+class UploadFileForm(forms.Form):
+    description = forms.CharField(max_length = 200)
+    file = forms.FileField()
+
+
+@permission_required('lms.teacher_rights')
+def upload_file(request):
+    if request.method == 'POST':
+        print("post")
+        print(request.FILES)
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            store_uploaded_file(request.FILES['file'])
+            return redirect('index')
+    else:
+        form = UploadFileForm()
+    return render(request, r'lms\upload_file.html', {'form':form})
+
+
+import os
+
+def store_uploaded_file(file):
+    file_path = os.path.join('storage', file.name)
+    #TODO must create 'storage' folder if not existing
+    with open(file_path , 'wb+') as f:
+        for chunk in file.chunks():
+            f.write(chunk)
+
+
+from django.http import HttpResponse
+
+def serve_file(request, file_id):
+    print("serving file: {}".format(file_id))
+    """ Serve file for download """
+    file = open(os.path.join('storage', file_id), 'rb')
+    response = HttpResponse(file, content_type ="application/octet-stream")
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_id)
+    return response
+
+
+
+
 
 
 

@@ -1,3 +1,6 @@
+# ignore storage folder
+storage/
+
 # Database
 db.sqlite3
 

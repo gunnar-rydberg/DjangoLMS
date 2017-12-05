@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h2>Upload File</h2>
+
+<!-- NOTE! must be multipart to work! -->
+<form enctype="multipart/form-data" method="post">{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Create" />
+</form>
+
+{% endblock %}
