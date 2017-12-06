@@ -124,7 +124,7 @@ def serve_file(request, document_id):
     document = Document.objects.get(id = document_id)
     print("serving file: {} ({})".format(document.id, document.file_name))
     path = os.path.join('storage',document_id)
-    file_name = "test.txt" #TODO fetch from db
+    file_name = document.file_name #TODO fetch from db
 
     file = open(os.path.join(path, file_name), 'rb')
     response = HttpResponse(file, content_type ="application/octet-stream")
